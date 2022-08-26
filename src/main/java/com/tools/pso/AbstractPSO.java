@@ -1,17 +1,24 @@
 package com.tools.pso;
 
+import lombok.Getter;
+import lombok.Setter;
 import java.util.Arrays;
 import java.util.Random;
 import static com.tools.pso.CompareType.MAX;
-import static com.tools.pso.CompareType.MIN;
 
 public abstract class AbstractPSO {
 
-    int iteration = 500;
+    @Setter
+    @Getter
+    private int iteration = 500;
 
-    int particleNum = 50;
+    @Setter
+    @Getter
+    private int particleNum = 50;
 
-    CompareType COMPARE_TYPE = MIN;
+    @Setter
+    @Getter
+    private CompareType COMPARE_TYPE = MAX;
 
     private final Random rand = new Random();
 
@@ -21,31 +28,29 @@ public abstract class AbstractPSO {
 
     private Particle bestParticle;
 
+    private Particle[] particles;
+
     public abstract double[] initXs();
 
     public abstract double score(double[] xs);
 
     public Particle runAndGet() {
-
-        bestParticle = new Particle();
-        bestParticle.init();
-
-        Particle[] particles = initParticles();
-        updateGlobal(particles);
+        initBestParticle();
+        initParticles();
+        updateGlobal();
 
         for (int i = 0; i < iteration; i++) {
             for (Particle particle : particles) {
                 particle.update(i);
             }
-            updateGlobal(particles);
-            System.out.println(i + "次迭代: " + bestParticle);
-            System.out.println();
+            updateGlobal();
+            //System.out.println(i + "次迭代: " + bestParticle + "\n");
         }
 
         return bestParticle;
     }
 
-    private void updateGlobal(Particle[] particles) {
+    private void updateGlobal() {
         if (COMPARE_TYPE == MAX) {
             Particle particle = Arrays.stream(particles).max((o1, o2) -> (int) (o2.pBestScore - o1.pBestScore)).get();
             if (particle.pBestScore > bestParticle.pBestScore) {
@@ -67,13 +72,17 @@ public abstract class AbstractPSO {
         bestParticle.pBestScore = particle.score;
     }
 
-    private Particle[] initParticles() {
-        Particle[] particles = new Particle[particleNum];
+    private void initBestParticle() {
+        bestParticle = new Particle();
+        bestParticle.init();
+    }
+
+    private void initParticles() {
+        particles = new Particle[particleNum];
         for (int i = 0; i < particles.length; i++) {
             particles[i] = new Particle();
             particles[i].init();
         }
-        return particles;
     }
 
     public class Particle {

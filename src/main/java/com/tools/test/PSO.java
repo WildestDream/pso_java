@@ -1,4 +1,7 @@
-package com.tools.pso;
+package com.tools.test;
+
+import com.tools.pso.AbstractPSO;
+import static com.tools.pso.CompareType.MIN;
 
 public class PSO {
     public static void main(String[] args) {
@@ -13,6 +16,10 @@ public class PSO {
                 return xs[0] * xs[0] + xs[1] * xs[1];
             }
         };
+
+        pso.setCOMPARE_TYPE(MIN);
+        pso.setIteration(1000);
+        pso.setParticleNum(500);
 
         AbstractPSO.Particle result = pso.runAndGet();
         System.out.println(result);

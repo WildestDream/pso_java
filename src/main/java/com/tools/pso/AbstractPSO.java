@@ -1,10 +1,11 @@
 package com.tools.pso;
 
+import com.tools.model.CompareType;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.Arrays;
 import java.util.Random;
-import static com.tools.pso.CompareType.MAX;
+import static com.tools.model.CompareType.MAX;
 
 public abstract class AbstractPSO {
 
@@ -52,7 +53,7 @@ public abstract class AbstractPSO {
 
     private void updateGlobal() {
         if (COMPARE_TYPE == MAX) {
-            Particle particle = Arrays.stream(particles).max((o1, o2) -> (int) (o2.pBestScore - o1.pBestScore)).get();
+            Particle particle = Arrays.stream(particles).max((o1, o2) -> (int) (o1.pBestScore - o2.pBestScore)).get();
             if (particle.pBestScore > bestParticle.pBestScore) {
                 copyToBestParticle(particle);
             }
@@ -95,6 +96,7 @@ public abstract class AbstractPSO {
 
         private double[] pBestXs;
 
+        @Getter
         private double pBestScore;
 
         private int dimensionNum;

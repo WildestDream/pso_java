@@ -21,7 +21,7 @@ class AbstractPSOTest {
             }
         };
 
-        pso.setCOMPARE_TYPE(MIN);
+        pso.setCompareType(MIN);
         pso.setIteration(500);
         pso.setParticleNum(50);
 
@@ -43,7 +43,7 @@ class AbstractPSOTest {
             }
         };
 
-        pso.setCOMPARE_TYPE(MAX);
+        pso.setCompareType(MAX);
         pso.setIteration(500);
         pso.setParticleNum(50);
 
@@ -66,7 +66,7 @@ class AbstractPSOTest {
             }
         };
 
-        pso.setCOMPARE_TYPE(MIN);
+        pso.setCompareType(MIN);
         pso.setIteration(500);
         pso.setParticleNum(100);
 

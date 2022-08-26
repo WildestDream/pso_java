@@ -28,12 +28,12 @@ class AbstractPSOConditionTest {
             }
         };
 
-        pso.setCOMPARE_TYPE(MAX);
+        pso.setCompareType(MAX);
         pso.setIteration(500);
         pso.setParticleNum(200);
 
         AbstractPSO.Particle result = pso.runAndGet();
-        Assertions.assertTrue(Math.abs(result.getPBestScore() - 50000.0) <= 0.1);
+        Assertions.assertTrue(Math.abs(result.getPBestScore() - 50000.0) <= 1);
     }
 
     @Test
@@ -56,12 +56,43 @@ class AbstractPSOConditionTest {
             }
         };
 
-        pso.setCOMPARE_TYPE(MIN);
+        pso.setCompareType(MIN);
         pso.setIteration(500);
         pso.setParticleNum(200);
 
         AbstractPSO.Particle result = pso.runAndGet();
-        System.out.println(result.getPBestScore());
-        Assertions.assertTrue(Math.abs(result.getPBestScore() - 10000.0) <= 0.1);
+        Assertions.assertTrue(Math.abs(result.getPBestScore() - 10000.0) <= 1);
+    }
+
+    /**
+     * https://blog.csdn.net/qq_44992157/article/details/124685546
+     */
+    @Test
+    void testMultiParamsFuncWithCondition() {
+        AbstractPSO pso = new AbstractPSO() {
+            @Override
+            public double[] initXs() {
+                return new double[] {0, 0};
+            }
+
+            @Override
+            public double score(double[] xs) {
+                return Math.pow(xs[0], 2) + Math.pow(xs[1], 2)
+                        - xs[0] * xs[1] - 10 * xs[0] - 4 * xs[1] + 60;
+            }
+
+            @Override
+            public Function<double[], Boolean> condition() {
+                return xs -> xs[0] >= -15.0 && xs[0] <= 15.0 &&
+                        xs[1] >= -15.0 && xs[1] <= 15.0;
+            }
+        };
+
+        pso.setCompareType(MIN);
+        pso.setIteration(500);
+        pso.setParticleNum(200);
+
+        AbstractPSO.Particle result = pso.runAndGet();
+        Assertions.assertTrue(Math.abs(result.getPBestScore() - 8.0) <= 0.5);
     }
 }

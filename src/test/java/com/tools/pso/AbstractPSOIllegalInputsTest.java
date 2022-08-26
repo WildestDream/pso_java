@@ -20,7 +20,7 @@ class AbstractPSOIllegalInputsTest {
             }
         };
 
-        pso.setCOMPARE_TYPE(MIN);
+        pso.setCompareType(MIN);
         pso.setIteration(500);
         pso.setParticleNum(50);
 
@@ -41,7 +41,7 @@ class AbstractPSOIllegalInputsTest {
             }
         };
 
-        pso.setCOMPARE_TYPE(MIN);
+        pso.setCompareType(MIN);
         pso.setIteration(500);
         pso.setParticleNum(50);
 

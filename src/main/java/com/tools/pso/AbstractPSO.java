@@ -20,7 +20,7 @@ public abstract class AbstractPSO {
 
     @Setter
     @Getter
-    private CompareType COMPARE_TYPE = MAX;
+    private CompareType compareType = MAX;
 
     private final Random rand = new Random();
 
@@ -65,7 +65,7 @@ public abstract class AbstractPSO {
     }
 
     private void updateGlobal() {
-        if (COMPARE_TYPE == MAX) {
+        if (compareType == MAX) {
             Particle particle = Arrays.stream(particles).max((o1, o2) -> (int) (o1.pBestScore - o2.pBestScore)).get();
             if (particle.pBestScore > bestParticle.pBestScore) {
                 copyToBestParticle(particle);
@@ -155,7 +155,7 @@ public abstract class AbstractPSO {
         }
 
         private void updatePBestAndScore() {
-            if (COMPARE_TYPE == MAX) {
+            if (compareType == MAX) {
                 if (score > pBestScore) {
                     System.arraycopy(xs, 0, pBestXs, 0, dimensionNum);
                     pBestScore = score;
@@ -174,7 +174,7 @@ public abstract class AbstractPSO {
         }
 
         private void penalty() {
-            if (COMPARE_TYPE == MAX) {
+            if (compareType == MAX) {
                 if (!condition.apply(xs)) {
                     score = -1 * PENALTY_FACTOR;
                 }

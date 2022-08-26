@@ -32,6 +32,10 @@ public abstract class AbstractPSO {
 
     private static final double DISTURBANCE = 10;
 
+    public static final double W_START = 0.9;
+
+    public static final double W_END = 0.2;
+
     private Particle bestParticle;
 
     private Particle[] particles;
@@ -50,11 +54,11 @@ public abstract class AbstractPSO {
         updateGlobal();
 
         for (int i = 0; i < iteration; i++) {
+            double factor = currentLDWFactor(i);
             for (Particle particle : particles) {
-                particle.update(i);
+                particle.update(factor);
             }
             updateGlobal();
-            //System.out.println(i + "次迭代: " + bestParticle + "\n");
         }
 
         return bestParticle;
@@ -95,6 +99,11 @@ public abstract class AbstractPSO {
         }
     }
 
+    private double currentLDWFactor(int currentIter) {
+        double tmp = Math.pow((double) currentIter / iteration, 2);
+        return W_START - (W_START - W_END) * tmp;
+    }
+
     public class Particle {
 
         private double[] xs;
@@ -130,14 +139,13 @@ public abstract class AbstractPSO {
             pBestScore = score;
         }
 
-        public void update(int iter) {
-            updateVsAndXs(iter);
+        public void update(double factor) {
+            updateVsAndXs(factor);
             updateScore();
             updatePBestAndScore();
         }
 
-        private void updateVsAndXs(int iter) {
-            double factor = (double) (iteration - iter) / iteration;
+        private void updateVsAndXs(double factor) {
             double[] gBestXs = bestParticle.xs;
             for (int i = 0; i < dimensionNum; i++) {
                 vs[i] = vs[i] * factor + W1 * rand.nextDouble() * (pBestXs[i] - xs[i]) +

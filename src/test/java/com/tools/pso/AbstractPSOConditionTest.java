@@ -52,7 +52,7 @@ class AbstractPSOConditionTest {
             @Override
             public Function<double[], Boolean> condition() {
                 return xs -> xs[0] >= 0 && xs[0] <= 100 && //0 - 100
-                        xs[1] >= 100 && xs[1] <= 200;   //100 - 200
+                        xs[1] >= 100 && xs[1] <= 200;      //100 - 200
             }
         };
 

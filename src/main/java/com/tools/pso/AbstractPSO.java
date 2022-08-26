@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.function.Function;
 import static com.tools.model.CompareType.MAX;
 
 public abstract class AbstractPSO {
@@ -27,6 +28,10 @@ public abstract class AbstractPSO {
 
     private static final double W2 = 2.0;
 
+    private static final double PENALTY_FACTOR = Double.MAX_VALUE;
+
+    private static final double DISTURBANCE = 10;
+
     private Particle bestParticle;
 
     private Particle[] particles;
@@ -34,6 +39,10 @@ public abstract class AbstractPSO {
     public abstract double[] initXs();
 
     public abstract double score(double[] xs);
+
+    public Function<double[], Boolean> condition() {
+        return (xs) -> true;
+    }
 
     public Particle runAndGet() {
         initBestParticle();
@@ -99,22 +108,27 @@ public abstract class AbstractPSO {
         @Getter
         private double pBestScore;
 
+        private Function<double[], Boolean> condition;
+
         private int dimensionNum;
 
         private void init() {
             xs = initXs();
+            if (xs == null || xs.length == 0) {
+                throw new IllegalArgumentException("xs should not be empty");
+            }
             //附加扰动
             for (int i = 0; i < xs.length; i++) {
-                xs[i] += rand.nextDouble() * 10;
+                xs[i] += rand.nextDouble() * DISTURBANCE;
             }
             dimensionNum = xs.length;
             vs = new double[dimensionNum];
-            score = score(xs);
+            condition = condition();
+            updateScore();
             pBestXs = new double[dimensionNum];
             System.arraycopy(xs, 0, pBestXs, 0, dimensionNum);
             pBestScore = score;
         }
-
 
         public void update(int iter) {
             updateVsAndXs(iter);
@@ -148,13 +162,25 @@ public abstract class AbstractPSO {
 
         private void updateScore() {
             score = score(xs);
+            penalty();
+        }
+
+        private void penalty() {
+            if (COMPARE_TYPE == MAX) {
+                if (!condition.apply(xs)) {
+                    score = -1 * PENALTY_FACTOR;
+                }
+            } else {
+                if (!condition.apply(xs)) {
+                    score = PENALTY_FACTOR;
+                }
+            }
         }
 
 
         @Override
         public String toString() {
-            return "xs=" + Arrays.toString(xs) +
-                    ", pBestScore=" + pBestScore;
+            return "xs=" + Arrays.toString(pBestXs) + ", pBestScore=" + pBestScore;
         }
     }
 

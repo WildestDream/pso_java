@@ -17,7 +17,7 @@ class AbstractPSOTest {
 
             @Override
             public double score(double[] xs) {
-                return xs[0] * xs[0] + xs[1] * xs[1];
+                return Math.pow(xs[0], 2) + Math.pow(xs[1], 2);
             }
         };
 
@@ -39,7 +39,7 @@ class AbstractPSOTest {
 
             @Override
             public double score(double[] xs) {
-                return -1 * (xs[0] * xs[0] + xs[1] * xs[1]);
+                return -1 * (Math.pow(xs[0], 2) + Math.pow(xs[1], 2));
             }
         };
 
